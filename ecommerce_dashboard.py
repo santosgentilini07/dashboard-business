@@ -162,10 +162,10 @@ with col_left:
         )
         .encode(
             x=alt.X("Month:T", title="Month", axis=alt.Axis(format="%b %Y")),
-            y=alt.Y("revenue:Q", title="Revenue (£)", axis=alt.Axis(format="£,.0f")),
+            y=alt.Y("revenue:Q", title="Revenue (£)", axis=alt.Axis(format=",.0f")),
             tooltip=[
                 alt.Tooltip("Month:T", title="Month", format="%B %Y"),
-                alt.Tooltip("revenue:Q", title="Revenue", format="£,.2f"),
+                alt.Tooltip("revenue:Q", title="Revenue (£)", format=",.2f"),
             ],
         )
         .properties(height=280)
@@ -185,7 +185,7 @@ with col_right:
         .mark_bar(cornerRadiusTopRight=4, cornerRadiusBottomRight=4)
         .encode(
             y=alt.Y("Country:N", sort=None, title=None),
-            x=alt.X("Revenue:Q", title="Revenue (£)", axis=alt.Axis(format="£,.0f")),
+            x=alt.X("Revenue:Q", title="Revenue (£)", axis=alt.Axis(format=",.0f")),
             color=alt.Color(
                 "Revenue:Q",
                 scale=alt.Scale(scheme="blues"),
@@ -193,7 +193,7 @@ with col_right:
             ),
             tooltip=[
                 alt.Tooltip("Country:N"),
-                alt.Tooltip("Revenue:Q", format="£,.2f"),
+                alt.Tooltip("Revenue:Q", title="Revenue (£)", format=",.2f"),
             ],
         )
         .properties(height=280)
@@ -217,10 +217,10 @@ with col_left2:
         .mark_bar(cornerRadiusTopRight=4, cornerRadiusBottomRight=4, color="#F4845F")
         .encode(
             y=alt.Y("short:N", sort=None, title=None),
-            x=alt.X("Revenue:Q", title="Revenue (£)", axis=alt.Axis(format="£,.0f")),
+            x=alt.X("Revenue:Q", title="Revenue (£)", axis=alt.Axis(format=",.0f")),
             tooltip=[
                 alt.Tooltip("Description:N", title="Product"),
-                alt.Tooltip("Revenue:Q", format="£,.2f"),
+                alt.Tooltip("Revenue:Q", title="Revenue (£)", format=",.2f"),
             ],
         )
         .properties(height=380)
