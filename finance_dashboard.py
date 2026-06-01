@@ -591,8 +591,7 @@ if show_bgt:
 fig_gm.add_hline(y=0, line_width=1, line_color="#d1d5db")
 fig_gm.update_layout(
     **base_layout(height=260, hovermode="x unified"),
-    yaxis=dict(**_YAXIS, ticksuffix="%", range=[-4, 58],
-               tickfont_size=11),
+    yaxis=dict(**_YAXIS, ticksuffix="%", range=[-4, 58]),
     xaxis=dict(**_XAXIS, tickformat="%b %Y"),
     legend={**_LEGEND, "y": -0.28},
 )
