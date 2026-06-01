@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+.env
+ecommerce_uk.csv
+sales_data.csv
+.streamlit/secrets.toml
