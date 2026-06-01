@@ -472,11 +472,10 @@ fig_wf = go.Figure(go.Waterfall(
 ))
 
 fig_wf.update_layout(
-    **base_layout(height=400),
+    **base_layout(height=400, margin=dict(l=8, r=8, t=36, b=70)),
     showlegend=False,
     yaxis=dict(**_YAXIS, tickprefix="£", tickformat=",.0f"),
     xaxis={**_XAXIS, "tickangle": -30, "tickfont": dict(size=10)},
-    margin=dict(l=8, r=8, t=36, b=70),
 )
 st.plotly_chart(fig_wf, use_container_width=True)
 
