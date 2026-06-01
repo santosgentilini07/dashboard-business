@@ -295,7 +295,7 @@ fig_pl.update_layout(
     **base_layout(height=320, hovermode="x unified"),
     yaxis=dict(**_YAXIS, tickprefix="£", tickformat=",.0f"),
     xaxis=dict(**_XAXIS, tickformat="%b %Y"),
-    legend=dict(**_LEGEND, y=-0.22),
+    legend={**_LEGEND, "y": -0.22},
 )
 st.plotly_chart(fig_pl, use_container_width=True)
 
@@ -404,7 +404,7 @@ for _, row in capex_months.iterrows():
 
 fig_cf.update_layout(
     **base_layout(height=360, barmode="relative", hovermode="x unified"),
-    legend=dict(**_LEGEND, y=-0.22),
+    legend={**_LEGEND, "y": -0.22},
 )
 fig_cf.update_yaxes(
     **_YAXIS, tickprefix="£", tickformat=",.0f", title_text="Cash Flow (£)",
@@ -476,7 +476,7 @@ fig_wf.update_layout(
     **base_layout(height=400),
     showlegend=False,
     yaxis=dict(**_YAXIS, tickprefix="£", tickformat=",.0f"),
-    xaxis=dict(**_XAXIS, tickangle=-30, tickfont_size=10),
+    xaxis={**_XAXIS, "tickangle": -30, "tickfont": dict(size=10)},
     margin=dict(l=8, r=8, t=36, b=70),
 )
 st.plotly_chart(fig_wf, use_container_width=True)
@@ -533,7 +533,7 @@ def variance_chart(actual_col: str, budget_col: str, label: str) -> go.Figure:
 
     fig.update_layout(
         **base_layout(height=400, barmode="group", hovermode="x unified"),
-        legend=dict(**_LEGEND, y=-0.12),
+        legend={**_LEGEND, "y": -0.12},
     )
     fig.update_yaxes(showgrid=True, gridcolor="#f1f5f9", tickprefix="£",
                      tickformat=",.0f", tickfont_size=10, zeroline=True,
@@ -596,7 +596,7 @@ fig_gm.update_layout(
     yaxis=dict(**_YAXIS, ticksuffix="%", range=[-4, 58],
                tickfont_size=11),
     xaxis=dict(**_XAXIS, tickformat="%b %Y"),
-    legend=dict(**_LEGEND, y=-0.28),
+    legend={**_LEGEND, "y": -0.28},
 )
 st.plotly_chart(fig_gm, use_container_width=True)
 
