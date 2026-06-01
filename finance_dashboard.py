@@ -65,12 +65,12 @@ _LEGEND = dict(orientation="h", y=-0.2, x=0.5, xanchor="center",
                font_size=11, bgcolor="rgba(0,0,0,0)")
 
 def base_layout(**kw):
-    return dict(
+    defaults = dict(
         paper_bgcolor="white", plot_bgcolor="white",
         font=_FONT, hoverlabel=_HOVER,
         margin=dict(l=8, r=8, t=36, b=8),
-        **kw,
     )
+    return {**defaults, **kw}
 
 # ── Formatting helpers ─────────────────────────────────────────────────────────
 
