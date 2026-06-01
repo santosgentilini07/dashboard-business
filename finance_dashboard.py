@@ -69,7 +69,6 @@ def base_layout(**kw):
         paper_bgcolor="white", plot_bgcolor="white",
         font=_FONT, hoverlabel=_HOVER,
         margin=dict(l=8, r=8, t=36, b=8),
-        legend=_LEGEND,
         **kw,
     )
 
