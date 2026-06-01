@@ -2,6 +2,8 @@ import os
 import streamlit as st
 import pandas as pd
 import altair as alt
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
 
 st.set_page_config(
     page_title="UK E-Commerce Dashboard",
@@ -155,14 +157,8 @@ with col_left:
         alt.Chart(monthly)
         .mark_area(
             line={"color": "#4F8EF7", "strokeWidth": 2},
-            color=alt.Gradient(
-                gradient="linear",
-                stops=[
-                    alt.GradientStop(color="#4F8EF7", offset=0),
-                    alt.GradientStop(color="white", offset=1),
-                ],
-                x1=1, x2=1, y1=1, y2=0,
-            ),
+            color="#4F8EF7",
+            opacity=0.15,
         )
         .encode(
             x=alt.X("Month:T", title="Month", axis=alt.Axis(format="%b %Y")),
@@ -181,14 +177,14 @@ with col_right:
     by_country = (
         filt.groupby("Country", as_index=False)["Revenue"]
         .sum()
-        .sort_values("Revenue", ascending=False)
-        .head(10)
+        .sort_values("Revenue", ascending=True)   # ascending → largest at top in Altair
+        .tail(10)
     )
     bar_country = (
         alt.Chart(by_country)
         .mark_bar(cornerRadiusTopRight=4, cornerRadiusBottomRight=4)
         .encode(
-            y=alt.Y("Country:N", sort="-x", title=None),
+            y=alt.Y("Country:N", sort=None, title=None),
             x=alt.X("Revenue:Q", title="Revenue (£)", axis=alt.Axis(format="£,.0f")),
             color=alt.Color(
                 "Revenue:Q",
@@ -212,15 +208,15 @@ with col_left2:
     top_products = (
         filt.groupby("Description", as_index=False)["Revenue"]
         .sum()
-        .sort_values("Revenue", ascending=False)
-        .head(15)
+        .sort_values("Revenue", ascending=True)   # ascending → largest at top in Altair
+        .tail(15)
     )
     top_products["short"] = top_products["Description"].str.slice(0, 30)
     bar_prod = (
         alt.Chart(top_products)
         .mark_bar(cornerRadiusTopRight=4, cornerRadiusBottomRight=4, color="#F4845F")
         .encode(
-            y=alt.Y("short:N", sort="-x", title=None),
+            y=alt.Y("short:N", sort=None, title=None),
             x=alt.X("Revenue:Q", title="Revenue (£)", axis=alt.Axis(format="£,.0f")),
             tooltip=[
                 alt.Tooltip("Description:N", title="Product"),
@@ -306,30 +302,34 @@ with col_right3:
         .agg(revenue=("Revenue", "sum"), quantity=("Quantity", "sum"))
         .reset_index()
     )
-    base = alt.Chart(monthly_qr).encode(
-        x=alt.X("Month:T", title="Month", axis=alt.Axis(format="%b %Y"))
+    fig_qr = make_subplots(specs=[[{"secondary_y": True}]])
+    fig_qr.add_trace(go.Scatter(
+        x=monthly_qr["Month"], y=monthly_qr["revenue"],
+        name="Revenue (£)", mode="lines+markers",
+        line=dict(color="#4F8EF7", width=2),
+        marker=dict(size=4),
+        hovertemplate="%{x|%b %Y}<br>Revenue: £%{y:,.0f}<extra></extra>",
+    ), secondary_y=False)
+    fig_qr.add_trace(go.Scatter(
+        x=monthly_qr["Month"], y=monthly_qr["quantity"],
+        name="Quantity", mode="lines+markers",
+        line=dict(color="#F4845F", width=2, dash="dash"),
+        marker=dict(size=4),
+        hovertemplate="%{x|%b %Y}<br>Qty: %{y:,.0f}<extra></extra>",
+    ), secondary_y=True)
+    fig_qr.update_layout(
+        paper_bgcolor="white", plot_bgcolor="white",
+        height=280, margin=dict(l=8, r=8, t=8, b=8),
+        legend=dict(orientation="h", x=0.5, xanchor="center", y=-0.25,
+                    font_size=11, bgcolor="rgba(0,0,0,0)"),
+        hovermode="x unified",
+        font=dict(family="sans-serif", size=11),
     )
-    rev_line = base.mark_line(color="#4F8EF7", strokeWidth=2).encode(
-        y=alt.Y("revenue:Q", title="Revenue (£)", axis=alt.Axis(format="£,.0f")),
-        tooltip=[
-            alt.Tooltip("Month:T", format="%B %Y"),
-            alt.Tooltip("revenue:Q", title="Revenue", format="£,.0f"),
-        ],
-    )
-    qty_line = base.mark_line(color="#F4845F", strokeWidth=2, strokeDash=[6, 3]).encode(
-        y=alt.Y("quantity:Q", title="Quantity"),
-        tooltip=[
-            alt.Tooltip("Month:T", format="%B %Y"),
-            alt.Tooltip("quantity:Q", title="Qty"),
-        ],
-    )
-    dual = (
-        alt.layer(rev_line, qty_line)
-        .resolve_scale(y="independent")
-        .properties(height=280)
-    )
-    st.altair_chart(dual, use_container_width=True)
-    st.caption("🔵 Revenue (left axis)  ·  🟠 Quantity (right axis)")
+    fig_qr.update_yaxes(tickprefix="£", tickformat=",.0f", showgrid=True,
+                        gridcolor="#f1f5f9", secondary_y=False)
+    fig_qr.update_yaxes(tickformat=",d", showgrid=False, secondary_y=True)
+    fig_qr.update_xaxes(showgrid=False)
+    st.plotly_chart(fig_qr, use_container_width=True)
 
 # ── Raw data expander ─────────────────────────────────────────────────────────
 with st.expander("View raw data sample (500 rows)"):
